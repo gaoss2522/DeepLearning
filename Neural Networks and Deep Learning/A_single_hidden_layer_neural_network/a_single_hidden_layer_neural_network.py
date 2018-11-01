@@ -4,6 +4,7 @@ import sklearn
 import sklearn.datasets
 import sklearn.linear_model
 from testCases import *
+from planar_utils import *
 
 np.random.seed(1)
 
@@ -65,6 +66,7 @@ def forward_propagation(X, parameters):
 
     return A2, cache
 
+
 # https://blog.csdn.net/u012162613/article/details/44239919
 def compute_cost(A2, Y, parameters):
     m = Y.shape[1]
@@ -89,7 +91,7 @@ def backward_propagation(parameters, cache, X, Y):
 
     dZ2= A2-Y
     dW2 = np.dot(dZ2, A1.T)/m
-    db2 = np.sum(dZ2, axis=1, keepdims=True)/m # 按行相加，保持数据的二维性
+    db2 = np.sum(dZ2, axis=1, keepdims=True)/m  # 按行相加，保持数据的二维性
 
     dZ1 = np.dot(W2.T, dZ2)*(1-np.power(A1,2))
     dW1 = np.dot(dZ1, X.T)/m
@@ -171,6 +173,7 @@ def predict(parameters, X):
 
 
 noisy_circles, noisy_moons, blobs, gaussian_quantiles, no_structure = load_extra_datasets()
+
 datasets = {"noisy_circles": noisy_circles,
             "noisy_moons": noisy_moons,
             "blobs": blobs,
@@ -189,36 +192,3 @@ if dataset == "noisy_moons":
 
 # Visualize the data
 plt.scatter(X[0, :], X[1, :], c=Y, s=40, cmap=plt.cm.Spectral);
-
-
-
-parameters = nn_model(X, Y, n_h = 4, num_iterations = 10000, print_cost=True)
-
-# Plot the decision boundary
-plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
-plt.title("Decision Boundary for hidden layer size " + str(4))
-
-
-# **Expected Output**:
-#
-# <table style="width:40%">
-#   <tr>
-#     <td>**Cost after iteration 9000**</td>
-#     <td> 0.218607 </td>
-#   </tr>
-#
-# </table>
-#
-
-# In[79]:
-
-# Print accuracy
-predictions = predict(parameters, X)
-print ('Accuracy: %d' % float((np.dot(Y,predictions.T) + np.dot(1-Y,1-predictions.T))/float(Y.size)*100) + '%')
-
-
-
-parameters, X_assess = predict_test_case()
-
-predictions = predict(parameters, X_assess)
-print("predictions mean = " + str(np.mean(predictions)))
