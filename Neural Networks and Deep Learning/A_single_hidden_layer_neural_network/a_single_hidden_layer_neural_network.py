@@ -11,6 +11,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+
 def layer_sizes(X, Y):
     n_x = X.shape[0]
     n_h = 4
@@ -52,7 +53,6 @@ def forward_propagation(X, parameters):
     b2 = parameters['b2']
     Z1 = np.dot(W1, X)+b1
     A1 = np.tanh(Z1)
-
     Z2 = np.dot(W2, A1)+b2
     A2 = sigmoid(Z2)
 
@@ -120,7 +120,6 @@ def update_parameters(parameters, grads, learning_rate = 1.2):
     W2 = W2-learning_rate*dW2
     b2 = b2-learning_rate*db2
 
-
     parameters = {"W1": W1,
                   "b1": b1,
                   "W2": W2,
@@ -165,30 +164,61 @@ def nn_model(X, Y, n_h, num_iterations = 10000, print_cost=False):
 
 
 def predict(parameters, X):
-    """
-    Using the learned parameters, predicts a class for each example in X
-
-    Arguments:
-    parameters -- python dictionary containing your parameters
-    X -- input data of size (n_x, m)
-
-    Returns
-    predictions -- vector of predictions of our model (red: 0 / blue: 1)
-    """
-
-    # Computes probabilities using forward propagation, and classifies to 0/1 using 0.5 as the threshold.
-    ### START CODE HERE ### (≈ 2 lines of code)
     A2, cache = forward_propagation(X, parameters)
     predictions = np.around(A2)
-    ### END CODE HERE ###
 
     return predictions
 
 
-# In[77]:
+noisy_circles, noisy_moons, blobs, gaussian_quantiles, no_structure = load_extra_datasets()
+datasets = {"noisy_circles": noisy_circles,
+            "noisy_moons": noisy_moons,
+            "blobs": blobs,
+            "gaussian_quantiles": gaussian_quantiles}
+
+### START CODE HERE ### (choose your dataset)
+dataset = "noisy_moons"
+### END CODE HERE ###
+
+X, Y = datasets[dataset]
+X, Y = X.T, Y.reshape(1, Y.shape[0])
+
+# make blobs binary
+if dataset == "noisy_moons":
+    Y = Y%2
+
+# Visualize the data
+plt.scatter(X[0, :], X[1, :], c=Y, s=40, cmap=plt.cm.Spectral);
+
+
+
+parameters = nn_model(X, Y, n_h = 4, num_iterations = 10000, print_cost=True)
+
+# Plot the decision boundary
+plot_decision_boundary(lambda x: predict(parameters, x.T), X, Y)
+plt.title("Decision Boundary for hidden layer size " + str(4))
+
+
+# **Expected Output**:
+#
+# <table style="width:40%">
+#   <tr>
+#     <td>**Cost after iteration 9000**</td>
+#     <td> 0.218607 </td>
+#   </tr>
+#
+# </table>
+#
+
+# In[79]:
+
+# Print accuracy
+predictions = predict(parameters, X)
+print ('Accuracy: %d' % float((np.dot(Y,predictions.T) + np.dot(1-Y,1-predictions.T))/float(Y.size)*100) + '%')
+
+
 
 parameters, X_assess = predict_test_case()
 
 predictions = predict(parameters, X_assess)
 print("predictions mean = " + str(np.mean(predictions)))
-
