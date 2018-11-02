@@ -55,21 +55,8 @@ layers_dims = (n_x, n_h, n_y)
 
 # GRADED FUNCTION: two_layer_model
 
-def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 3000, print_cost=False):
-    """
-    Implements a two-layer neural network: LINEAR->RELU->LINEAR->SIGMOID.
 
-    Arguments:
-    X -- input data, of shape (n_x, number of examples)
-    Y -- true "label" vector (containing 0 if cat, 1 if non-cat), of shape (1, number of examples)
-    layers_dims -- dimensions of the layers (n_x, n_h, n_y)
-    num_iterations -- number of iterations of the optimization loop
-    learning_rate -- learning rate of the gradient descent update rule
-    print_cost -- If set to True, this will print the cost every 100 iterations
-
-    Returns:
-    parameters -- a dictionary containing W1, W2, b1, and b2
-    """
+def two_layer_model(X, Y, layers_dims, learning_rate=0.0075, num_iterations=3000, print_cost=False):
 
     np.random.seed(1)
     grads = {}
@@ -77,8 +64,7 @@ def two_layer_model(X, Y, layers_dims, learning_rate = 0.0075, num_iterations = 
     m = X.shape[1]                           # number of examples
     (n_x, n_h, n_y) = layers_dims
 
-    # Initialize parameters dictionary, by calling one of the functions you'd previously implemented
-    ### START CODE HERE ### (≈ 1 line of code)
+
     parameters = initialize_parameters(n_x, n_h, n_y)
     ### END CODE HERE ###
 
